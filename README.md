@@ -2,8 +2,6 @@
 
 An interactive web application for visualizing and analyzing the global air travel network. Built with Python and Dash, this project explores the "small-world" phenomenon in air travel, allowing users to find optimal routes, explore all possible connections, and view the entire flight network in real-time.
 
-> **Note:** You should replace `app_screenshot.png` with an actual screenshot of your running application.
-
 ## ✨ Key Features
 
 This application provides four distinct modes for exploring the global flight network, each offering a unique perspective on global connectivity.
