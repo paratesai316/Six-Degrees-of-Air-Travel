@@ -1,0 +1,7 @@
+pandas
+networkx
+plotly
+dash
+numpy
+requests
+geonamescache

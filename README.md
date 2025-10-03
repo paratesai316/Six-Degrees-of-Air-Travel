@@ -1,58 +1,75 @@
-# ✈️ Global Flight Network Analysis
+✈️ Global Flight Network Explorer
+An interactive web application for visualizing and analyzing the global air travel network. Built with Python and Dash, this project explores the "small-world" phenomenon in air travel, allowing users to find optimal routes, explore all possible connections, and view the entire flight network in real-time.
 
-An exploration of the world's air travel network using Python, graph theory, and data analysis. This project investigates the "small-world" phenomenon in air travel, evolving from a simple analysis of connections to a sophisticated, population-weighted simulation of shortest travel distances.
+✨ Key Features
+This application provides four distinct modes for exploring the global flight network:
 
----
+🌐 Full Network View: An interactive overview of the entire flight network. A dynamic slider allows you to filter the density of the network, from showing only major international hubs to revealing the full, complex web of connections. Airport hubs are sized and colored based on the number of destinations they serve.
 
-## 📖 Project Overview
+✈️ Optimal Route Finder: Calculates and compares the two best paths between any two airports:
 
-Inspired by the "six degrees of separation" concept, this project models the global flight network as a graph to determine how interconnected the world truly is. By representing airports as nodes and direct flights as edges, we can use graph algorithms to uncover fascinating insights about global travel.
+Least Flights (BFS): The route with the minimum number of stops.
 
-The analysis progresses through several models of increasing complexity:
-1.  **Degrees of Separation:** Finding the average number of flights needed to connect any two random airports.
-2.  **Population-Weighted Connections:** Introducing a realistic bias where airports in more populous cities are more likely to be chosen as start or end points.
-3.  **Shortest Path Distance:** Calculating the shortest possible travel distance (in km) between airports using a geographically weighted graph and Dijkstra's algorithm.
+Shortest Distance (Dijkstra): The route that covers the minimum total kilometers.
 
----
+🔍 All Routes Explorer: Finds and displays every possible route between two airports for a given number of flights (up to 3). The results are displayed on the map and in a list sorted by the shortest total distance.
 
-## 🛠️ Models & Methodology
+📍 Single Airport Explorer: Select any airport to instantly see all of its direct, outgoing flight paths displayed on the map, providing a clear view of that airport's connectivity.
 
-This repository contains the code for four key analyses performed in a Google Colab notebook.
+🚀 How to Run the Web Application
+1. Clone the Repository
+git clone [https://github.com/paratesai316/Six-Degrees-of-Air-Travel.git](https://github.com/paratesai316/Six-Degrees-of-Air-Travel.git)
+cd Six-Degrees-of-Air-Travel
 
-### 1. Basic Degrees of Separation (Code Snippets 1 & 2)
-* **Goal:** Find the average number of flights between two randomly selected airports.
-* **Method:** An **unweighted, undirected graph** is constructed from the flight routes. A Breadth-First Search (BFS), implemented via `networkx.shortest_path_length`, is used to efficiently find the minimum number of connections.
-* **Key Insight:** Establishes a baseline for the connectivity of the network.
+2. Install Dependencies
+Install all necessary Python libraries using the requirements.txt file.
 
-### 2. Population-Weighted Analysis (Code Snippet 3)
-* **Goal:** Find the average number of flights, but with a bias towards real-world travel patterns.
-* **Method:** The `geonamescache` library is used to get population data for the cities served by each airport. During the simulation, `random.choices` performs a **weighted random sampling**, making airports in major hubs far more likely to be selected.
-* **Key Insight:** Provides a more realistic answer, as most travel occurs between populous areas. This model shows that the world is even "smaller" for the average traveler.
+pip install -r requirements.txt
 
-### 3. Shortest Distance with Population Bias (Code Snippet 4)
-* **Goal:** Find the average shortest *travel distance* (in km) between two population-weighted random airports.
-* **Method:** This is the most comprehensive model.
-    * The graph's edges are assigned a **weight** corresponding to the geographical distance between the two airports, calculated using the **Haversine formula**.
-    * The simulation uses the same population-weighted sampling as the previous model.
-    * **Dijkstra's algorithm** (`networkx.dijkstra_path_length`) is used to find the path that minimizes the total kilometers traveled.
-* **Key Insight:** Moves beyond counting stops to quantify the actual distances involved in global travel, providing a practical measure of global connectivity.
+3. Set Up Local Data (Optional)
+This project is enhanced by a local, more comprehensive dataset.
 
----
+Create a folder named data in the project's root directory.
 
-## 📊 Data Sources
-* **Flight & Airport Data:** [OpenFlights.org](https://openflights.org/data.html) - A comprehensive public database of airports, airlines, and flight routes.
-* **Population Data:** [`geonamescache`](https://pypi.org/project/geonamescache/) - A Python library that provides an offline, self-contained database of geographical data, including city populations.
+Place your local_data_airports.dat, local_data_airlines.dat, and local_data_routes.dat files inside it.
+(If these files are not found, the application will gracefully fall back to using the default online dataset.)
 
----
+4. Run the Application
+Execute the main application script from your terminal:
 
-## 🚀 How to Run
-1.  Clone this repository.
-2.  Upload the `.ipynb` notebook file to Google Colab.
-3.  Run the cells sequentially. The notebook will handle all dependencies and data downloads automatically.
+python 6_multi_modal_flight_map.py
 
----
+The application will be available at http://127.0.0.1:8050/.
 
-## 💡 Key Findings
-* The global flight network exhibits strong **small-world properties**, with a surprisingly low number of flights needed to connect most airports.
-* When weighting for population, the average number of connections **decreases**, confirming that major hubs make the world feel smaller for the majority of travelers.
-* The analysis of shortest travel distances provides a quantitative measure of global connectivity, revealing the average minimum distance required to travel between likely origin and destination points.
+🔬 Project Evolution & Static Analysis
+This project began as a series of static Python scripts to analyze the "six degrees of separation" concept and evolved into the full interactive application. The code for these initial analyses can be found in the src/static_analysis/ directory.
+
+The foundational analysis progressed through several models:
+
+Model 1 & 2: A baseline analysis using an unweighted graph and Breadth-First Search (BFS) to find the minimum number of flights between random airports.
+
+Model 3: A more realistic simulation that introduces a population bias to the random sampling, modeling real-world travel demand.
+
+Model 4: The most advanced static model, which constructs a distance-weighted graph and combines the population bias with Dijkstra's algorithm to find the shortest possible travel distance in kilometers.
+
+Static Analysis Results
+The visual outputs from these initial scripts are saved in the outputs/ folder.
+
+Unweighted Flight Distribution
+
+Population-Weighted Flights
+
+Population-Weighted Distance
+
+
+
+
+
+
+
+🛠️ Tech Stack & Data Sources
+Technology: Python, Dash, Plotly, NetworkX, Pandas
+
+Base Data: OpenFlights.org - The foundational public database of airports and routes.
+
+Local Data (Optional): A user-provided, more comprehensive dataset of airports, airlines, and routes that can be merged with the base data for a richer analysis.

@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap');
+
+/* General Body and Loader */
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.main-container {
+    background-color: #f4f4f4;
+}
+
+._dash-loading::after {
+    content: '✈️';
+    font-size: 48px;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    animation: fly-by 2.5s linear infinite;
+    z-index: 1000;
+}
+
+@keyframes fly-by {
+    0% { left: 0; transform: translateY(-50%); }
+    100% { left: 100%; transform: translateY(-50%); }
+}
+
+/* Header and Tabs */
+.app-header {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #1a2b3c;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.app-header img {
+    height: 60px;
+    margin-right: 20px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.custom-tabs {
+    background-color: #d2e6f0;
+    height: 68px;
+    border-bottom: none !important;
+}
+
+.custom-tabs .custom-tab {
+    background: #0073ff;
+    color: #f0f0f0;
+    border: none !important;
+    font-weight: 600;
+    font-family: 'Roboto', Arial, sans-serif;
+    padding: 24px 20px !important;
+    line-height: 20px !important;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-tabs .custom-tab:hover {
+    background-color: #b0c8d8;
+    color: #a0e0f1;
+}
+
+.custom-tabs .custom-tab--selected {
+    background: #3a64b4 !important;
+    border-bottom: 4px solid #f2c14e !important;
+    color: #ffffff !important;
+}
+
+/* Controls and Buttons */
+.controls-container {
+    width: 90%; 
+    margin: 15px auto; 
+    display: grid; 
+    gap: 15px;
+    align-items: center; 
+    padding: 15px; 
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px #e0e0e0;
+}
+
+.slider-container {
+    width: 80%;
+    margin: 15px auto;
+    text-align: center;
+}
+
+.controls-container label {
+    font-weight: bold;
+    text-align: center;
+}
+
+.route-container { grid-template-columns: 2fr 2fr 1fr; }
+.all-routes-container { grid-template-columns: 2fr 2fr 1fr 1fr; }
+.single-airport-container { grid-template-columns: 3fr 1fr; }
+
+
+.controls-container button {
+    height: 38px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 15px;
+}
+
+.controls-container button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.controls-container button:active {
+    background-color: #004494;
+    box-shadow: none;
+    transform: translateY(1px);
+}
+
+/* Results Table and Lists */
+.results-table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+.results-table th, .results-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+.results-table th {
+    background-color: #f2f2f2;
+}
+
+.sorted-routes-list {
+    text-align: left;
+    max-width: 800px;
+    margin: 10px auto;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+.sorted-routes-list h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.sorted-routes-list ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+.sorted-routes-list li {
+    padding: 5px 0;
+}
+
+/* Output Messages */
+#output-message {
+    text-align: center;
+    padding: 5px 20px;
+    font-size: 1.1em;
+}
+
+/* Graph and Loading Spinner */
+#loading-spinner, #flight-map {
+    height: 100%;
+}
+
