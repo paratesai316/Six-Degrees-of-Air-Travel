@@ -18,11 +18,11 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 try:
     base_path = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(os.path.dirname(base_path))
-    local_data_folder = "data"
+    local_data_folder = "Local database"
 
     LOCAL_ROUTES_PATH = os.path.join(project_root, local_data_folder, "local_data_routes.dat")
 except NameError:
-    local_data_folder = "../../data"
+    local_data_folder = "../../Local database"
     LOCAL_ROUTES_PATH = os.path.join(local_data_folder, "local_data_routes.dat")
 
 # ==============================================================================
