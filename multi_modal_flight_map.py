@@ -45,8 +45,8 @@ def haversine(lat1, lon1, lat2, lon2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
-def get_great_circle_arc(lon1, lat1, lon2, lat2, num_points=30):
-    """Generate intermediate points for a great-circle arc using a more stable method."""
+def get_great_circle_arc(lon1, lat1, lon2, lat2, num_points=15):
+    """Generate intermediate points for a great-circle arc."""
     lat1_rad, lon1_rad, lat2_rad, lon2_rad = map(math.radians, [lat1, lon1, lat2, lon2])
     x1, y1, z1 = math.cos(lat1_rad) * math.cos(lon1_rad), math.cos(lat1_rad) * math.sin(lon1_rad), math.sin(lat1_rad)
     x2, y2, z2 = math.cos(lat2_rad) * math.cos(lon2_rad), math.cos(lat2_rad) * math.sin(lon2_rad), math.sin(lat2_rad)
@@ -90,7 +90,6 @@ except Exception as e:
     exit()
 
 airline_name_map, local_routes_df, local_airports_df = {}, pd.DataFrame(), pd.DataFrame()
-
 if os.path.exists(LOCAL_AIRLINES_PATH):
     try:
         local_airlines = pd.read_csv(LOCAL_AIRLINES_PATH, sep='\t', comment='#', names=['airline-id', 'airline-name'], index_col='airline-id')
@@ -119,48 +118,42 @@ if os.path.exists(LOCAL_ROUTES_PATH):
 else:
     print("⚠️ Local routes file not found.")
 
-# --- Consolidate and clean data ---
-all_airports = base_airports.copy()
+# --- Consolidate and clean airport data ---
+base_airports_indexed = base_airports.set_index('IATA')
 if not local_airports_df.empty:
     local_airports_df.rename(columns={'airport-id': 'IATA', 'latitude': 'Latitude', 'longitude': 'Longitude', 'airport-name': 'Name'}, inplace=True)
-    for col in ['Airport ID', 'City', 'Country', 'ICAO']:
-        if col not in local_airports_df:
-            local_airports_df[col] = pd.NA
-    # FIX: Prioritize local data by using keep='last'
-    all_airports = pd.concat([all_airports, local_airports_df]).drop_duplicates(subset=['IATA'], keep='last')
+    local_airports_indexed = local_airports_df.set_index('IATA')
+    all_airports = local_airports_indexed.combine_first(base_airports_indexed).reset_index()
+else:
+    all_airports = base_airports.copy()
 
 airports_filtered = all_airports.dropna(subset=['Latitude', 'Longitude', 'IATA']).copy()
 airports_filtered['Airport ID'] = pd.to_numeric(airports_filtered['Airport ID'], errors='coerce')
-
 max_id = airports_filtered['Airport ID'].max()
-if pd.isna(max_id): max_id = 0 # Handle case where all IDs are missing initially
-
+if pd.isna(max_id): max_id = 0
 missing_id_mask = airports_filtered['Airport ID'].isna()
 num_missing = missing_id_mask.sum()
 if num_missing > 0:
     new_ids = range(int(max_id) + 1, int(max_id) + 1 + num_missing)
     airports_filtered.loc[missing_id_mask, 'Airport ID'] = new_ids
-
 airports_filtered['Airport ID'] = airports_filtered['Airport ID'].astype(int)
-
 airport_dict = airports_filtered.set_index('Airport ID').to_dict('index')
 iata_to_id = airports_filtered.set_index('IATA')['Airport ID'].to_dict()
 
-base_routes_filtered = base_routes.dropna(subset=['Source airport ID', 'Destination airport ID'])
-base_routes_filtered['Source airport ID'] = base_routes_filtered['Source airport ID'].astype(int)
-base_routes_filtered['Destination airport ID'] = base_routes_filtered['Destination airport ID'].astype(int)
-final_routes = set()
-for _, row in base_routes_filtered.iterrows():
-    final_routes.add((row['Source airport ID'], row['Destination airport ID'], row['Airline']))
-
+# --- Consolidate routes using a unified IATA-based approach ---
+final_routes_iata = set()
+base_routes.dropna(subset=['Source airport', 'Destination airport'], inplace=True)
+for _, row in base_routes.iterrows():
+    final_routes_iata.add((row['Source airport'], row['Destination airport'], row['Airline']))
 if not local_routes_df.empty:
-    local_routes_df['Source airport ID'] = local_routes_df['from'].map(iata_to_id)
-    local_routes_df['Destination airport ID'] = local_routes_df['to'].map(iata_to_id)
-    local_routes_df.dropna(subset=['Source airport ID', 'Destination airport ID'], inplace=True)
-    local_routes_df['Source airport ID'] = local_routes_df['Source airport ID'].astype(int)
-    local_routes_df['Destination airport ID'] = local_routes_df['Destination airport ID'].astype(int)
+    local_routes_df.dropna(subset=['from', 'to'], inplace=True)
     for _, row in local_routes_df.iterrows():
-        final_routes.add((row['Source airport ID'], row['Destination airport ID'], row['airline']))
+        final_routes_iata.add((row['from'], row['to'], row['airline']))
+final_routes = set()
+for source_iata, dest_iata, airline in final_routes_iata:
+    source_id, dest_id = iata_to_id.get(source_iata), iata_to_id.get(dest_iata)
+    if source_id is not None and dest_id is not None:
+        final_routes.add((source_id, dest_id, airline))
 print(f"Combined into {len(final_routes)} unique routes.")
 
 # ==============================================================================
@@ -176,6 +169,7 @@ for source_id, dest_id, airline in final_routes:
         G_weighted.add_edge(source_id, dest_id, weight=distance)
 degrees = dict(G_unweighted.out_degree())
 airports_filtered['degree'] = airports_filtered['Airport ID'].map(degrees).fillna(0)
+airports_filtered['size'] = np.log10(airports_filtered['degree'] + 1) * 8 + 3
 print("✅ Graph construction complete.")
 
 # ==============================================================================
@@ -183,12 +177,10 @@ print("✅ Graph construction complete.")
 # ==============================================================================
 print("Preparing data for visualization...")
 dropdown_options = sorted(
-    [{'label': f"{row['Name']} ({row['IATA']})", 'value': row['Airport ID']}
+    [{'label': f"{row['Name']} ({row['IATA']}) - {row['City']}, {row['Country']}", 'value': row['Airport ID']}
      for _, row in airports_filtered.iterrows() if pd.notna(row['Name']) and pd.notna(row['IATA'])],
     key=lambda x: x['label']
 )
-airports_with_routes = airports_filtered[airports_filtered['degree'] > 0].copy()
-airports_with_routes['size'] = np.log10(airports_with_routes['degree'] + 1) * 8
 print("✅ Data preparation complete.")
 
 # ==============================================================================
@@ -211,10 +203,11 @@ app.layout = html.Div(className='main-container', children=[
         ])
     ]),
     
+    # --- Static Control Panels (visibility controlled by callback) ---
     html.Div(id='network-controls', children=[
         html.Div(className='controls-container slider-container', children=[
             html.Label("Filter Network Density:"),
-            dcc.Slider(id='degree-slider', min=1, max=200, step=1, value=50, marks={**{i: str(i) for i in range(10, 101, 10)}, **{i: str(i) for i in range(120, 201, 20)}})
+            dcc.Slider(id='degree-slider', min=0, max=200, step=1, value=50, marks={0: '0', **{i: str(i) for i in range(20, 201, 20)}})
         ])
     ]),
     html.Div(id='route-controls', style={'display': 'none'}, children=[
@@ -269,6 +262,7 @@ def update_view(mode, find_route_clicks, find_all_clicks, show_flights_clicks, s
     styles = { 'network': {'display': 'none'}, 'route': {'display': 'none'}, 'all_routes': {'display': 'none'}, 'single_airport': {'display': 'none'} }
     ctx = dash.callback_context
     
+    # FIX: Handle the initial load correctly by defaulting to network view
     if not ctx.triggered:
         current_mode = 'network'
     else:
@@ -278,7 +272,7 @@ def update_view(mode, find_route_clicks, find_all_clicks, show_flights_clicks, s
     
     if current_mode == 'network':
         slider_val = slider_value if slider_value is not None else 50
-        filtered_airports = airports_with_routes[airports_with_routes['degree'] >= slider_val]
+        filtered_airports = airports_filtered[airports_filtered['degree'] >= slider_val]
         visible_airport_ids = set(filtered_airports['Airport ID'])
         lons, lats = [], []
         for source, dest in G_unweighted.edges():
