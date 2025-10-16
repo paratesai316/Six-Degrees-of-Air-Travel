@@ -7,9 +7,13 @@ An interactive web application for visualizing and analyzing the global air trav
 This application provides four distinct modes for exploring the global flight network, each offering a unique perspective on global connectivity.
 
 ### 🌐 Full Network View
+<img src="https://github.com/paratesai316/Six-Degrees-of-Air-Travel/blob/main/Outputs/Full_Network_View.png" alt="Full Network View" style="max-width:50%; height:auto;" />
+
 An interactive macro-view of the entire flight network. A dynamic slider allows you to filter the density of the network in real-time, moving from a clean overview of only the most connected international hubs to the full, intricate web of all available routes. Airport hubs are sized and colored based on their "degree"—the number of direct destinations they serve—making it easy to identify critical nodes in global travel infrastructure.
 
 ### ✈️ Optimal Route Finder
+<img src="https://github.com/paratesai316/Six-Degrees-of-Air-Travel/blob/main/Outputs/Optimal_Route_Finder.png" alt="Optimal Route Finder" style="max-width:50%; height:auto;" />
+
 This powerful tool calculates and compares the two best paths between any two airports, highlighting a fundamental trade-off in travel planning:
 
 - **Least Flights (BFS):** This route, found using a Breadth-First Search, guarantees the minimum number of takeoffs and landings, often representing the simplest itinerary for a traveler.
@@ -17,9 +21,13 @@ This powerful tool calculates and compares the two best paths between any two ai
 - **Shortest Distance (Dijkstra):** This route, calculated using Dijkstra's algorithm, finds the path that covers the minimum total kilometers. This often represents the most fuel-efficient or fastest route in terms of pure flight time, even if it requires an extra connection.
 
 ### 🔍 All Routes Explorer
+<img src="https://github.com/paratesai316/Six-Degrees-of-Air-Travel/blob/main/Outputs/All_Possible_Routes.png" alt="All Routes Explorer" style="max-width:50%; height:auto;" />
+
 Go beyond the "best" path and discover every possible way to get from A to B. This mode finds and displays every unique route between two airports for a given number of flights (up to 3, to manage computational load). The results are drawn on the map and presented in a detailed list, including the specific airlines for each leg of the journey, sorted by the shortest total distance.
 
 ### 📍 Single Airport Explorer
+<img src="https://github.com/paratesai316/Six-Degrees-of-Air-Travel/blob/main/Outputs/Single_Airport_Routes.png" alt="Single Airport Explorer" style="max-width:50%; height:auto;" />
+
 Zoom in on a single airport to instantly see all of its direct, outgoing flight paths displayed on the map. This provides a clear, focused visualization of an airport's reach and its role as either a local spoke or a major international hub.
 
 ---
