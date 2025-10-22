@@ -2,14 +2,21 @@
   "version": 2,
   "builds": [
     {
-      "src": "6_multi_modal_flight_map.py",
-      "use": "@vercel/python"
+      "src": "multi_modal_flight_map.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
     }
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "6_multi_modal_flight_map.py"
+      "dest": "multi_modal_flight_map:server"
     }
   ]
 }
