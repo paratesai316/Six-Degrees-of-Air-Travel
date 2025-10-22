@@ -8,6 +8,3 @@ pycache/
 IDE specific files
 .vscode/
 .idea/
-
-Vercel files
-*.json
