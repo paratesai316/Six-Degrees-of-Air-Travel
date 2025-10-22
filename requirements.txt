@@ -5,3 +5,6 @@ dash
 numpy
 requests
 geonamescache
+datashader
+pillow
+gunicorn
