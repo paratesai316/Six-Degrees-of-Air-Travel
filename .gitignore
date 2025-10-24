@@ -1,10 +1,21 @@
-Ignore the local data folder
-/data/
+Local data files
+
+/Local database/
+
+Pre-processed data cache
+
+/processed_data/
 
 Python cache
+
 pycache/
 *.pyc
 
 IDE specific files
+
 .vscode/
 .idea/
+
+Downloaded data files (from static scripts)
+
+*.dat
