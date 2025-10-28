@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap');
 
-/* General Body and Loader */
 body {
     margin: 0;
     font-family: 'Roboto', Arial, sans-serif;
@@ -25,10 +24,9 @@ body {
     100% { left: 100%; transform: translateY(-50%); }
 }
 
-/* Header and Tabs */
 .app-header {
     display: flex;
-    align-items: center;
+    align-items: left;
     padding: 0 20px;
     background-color: #1a2b3c;
     color: white;
@@ -38,38 +36,46 @@ body {
     z-index: 10;
 }
 
+.header-title-container {
+    flex-grow: 1;
+    text-align: left; 
+}
+
 .app-header img {
-    height: 60px;
+    height: 80px;
     margin-right: 20px;
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 36px;
     font-weight: bold;
-    flex-grow: 1;
 }
 
-.custom-tabs {
-    background-color: #d2e6f0;
-    height: 68px;
-    border-bottom: none !important;
+.app-author-credit {
+    font-size: 7.5px; 
+    color: #888888; 
+    margin-top: -6px; 
+    margin-bottom: 5px; 
+    padding: 0; 
 }
 
 .custom-tabs .custom-tab {
-    background: #0073ff;
-    color: #f0f0f0;
-    border: none !important;
+    background: #0073ff !important;
+    color: #ffffff !important;
+    border: 1px solid #0073ff !important;
     font-weight: 600;
     font-family: 'Roboto', Arial, sans-serif;
     padding: 24px 20px !important;
     line-height: 20px !important;
     white-space: nowrap;
     transition: background-color 0.2s ease, color 0.2s ease;
+    flex-shrink: 0; 
+    text-decoration-color: #ffffff;
 }
 
 .custom-tabs .custom-tab:hover {
-    background-color: #b0c8d8;
+    background-color: #b0c8d8 !important;
     color: #a0e0f1;
 }
 
@@ -79,7 +85,6 @@ body {
     color: #ffffff !important;
 }
 
-/* Controls and Buttons */
 .controls-container {
     width: 90%; 
     margin: 15px auto; 
@@ -103,10 +108,17 @@ body {
     text-align: center;
 }
 
-.route-container { grid-template-columns: 2fr 2fr 1fr; }
-.all-routes-container { grid-template-columns: 2fr 2fr 1fr 1fr; }
-.single-airport-container { grid-template-columns: 3fr 1fr; }
+.route-container { 
+    grid-template-columns: 2fr 2fr 1fr; 
+}
 
+.all-routes-container { 
+    grid-template-columns: 2fr 2fr 1fr 1fr; 
+
+}
+.single-airport-container { 
+    grid-template-columns: 3fr 1fr; 
+}
 
 .controls-container button {
     height: 38px;
@@ -183,4 +195,3 @@ body {
 #loading-spinner, #flight-map {
     height: 100%;
 }
-

@@ -8,18 +8,24 @@ def create_layout(app, options):
     'options' is the list of airports for dropdowns (passed as empty list on init).
     """
     return html.Div(className='main-container', children=[
-        html.Link(rel='icon', href=app.get_asset_url('logo.png')),
-        html.Header(className='app-header', children=[
-            html.Img(src=app.get_asset_url('logo.png')),
+    html.Link(rel='icon', href=app.get_asset_url('logo.png')),
+    html.Header(className='app-header', children=[
+        html.Img(src=app.get_asset_url('logo.png')),
+        html.Div(className='header-title-container', children=[
             html.H1("Global Flight Network Explorer"),
-            dcc.Tabs(id="mode-switcher", value='network', className='custom-tabs', children=[
-                dcc.Tab(label='🌐 Network', value='network', className='custom-tab', selected_className='custom-tab--selected'),
-                dcc.Tab(label='✈️ Optimal Route', value='route', className='custom-tab', selected_className='custom-tab--selected'),
-                dcc.Tab(label='🔍 All Routes', value='all_routes', className='custom-tab', selected_className='custom-tab--selected'),
-                dcc.Tab(label='📍 Single Airport', value='single_airport', className='custom-tab', selected_className='custom-tab--selected'),
-            ])
+            html.P(
+                "Created by Sai Parate",
+                className='app-author-credit'
+            ),
         ]),
         
+        dcc.Tabs(id="mode-switcher", value='network', className='custom-tabs', children=[
+            dcc.Tab(label='🌐 Network', value='network', className='custom-tab', selected_className='custom-tab--selected'),
+            dcc.Tab(label='✈️ Optimal Route', value='route', className='custom-tab', selected_className='custom-tab--selected'),
+            dcc.Tab(label='🔍 All Routes', value='all_routes', className='custom-tab', selected_className='custom-tab--selected'),
+            dcc.Tab(label='📍 Single Airport', value='single_airport', className='custom-tab', selected_className='custom-tab--selected'),
+        ])
+    ]),    
         # --- Static Control Panels (visibility controlled by callback) ---
         html.Div(id='network-controls', children=[
             html.Div(className='controls-container slider-container', children=[
