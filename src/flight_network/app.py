@@ -83,10 +83,5 @@ register_callbacks(app, G_unweighted, G_weighted, airport_dict, airports_filtere
 # ==============================================================================
 if __name__ == "__main__":
     import os
-    port = int(os.environ.get("PORT", 8050))
-    app.run_server(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
-
+    port = int(os.environ.get("PORT", 8080))
+    app.run(debug=True, host="0.0.0.0", port=port)
