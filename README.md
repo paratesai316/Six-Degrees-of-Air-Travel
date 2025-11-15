@@ -54,7 +54,7 @@ Zoom in on a single airport to instantly see all of its direct, outgoing flight 
 4. **Run the Application**
    Execute the main application script from your terminal:
    ```bash
-   python 6_multi_modal_flight_map.py
+   python src\flight_network\app.py
    ```
    The application will be available at http://127.0.0.1:8050/
 
